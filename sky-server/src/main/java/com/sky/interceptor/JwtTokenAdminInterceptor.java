@@ -1,7 +1,6 @@
 package com.sky.interceptor;
 
 import com.sky.constant.JwtClaimsConstant;
-import com.sky.context.BaseContext;
 import com.sky.properties.JwtProperties;
 import com.sky.utils.JwtUtil;
 import io.jsonwebtoken.Claims;
@@ -23,6 +22,7 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
 
     @Autowired
     private JwtProperties jwtProperties;
+
     /**
      * 校验jwt
      *
@@ -43,12 +43,13 @@ public class JwtTokenAdminInterceptor implements HandlerInterceptor {
         String token = request.getHeader(jwtProperties.getAdminTokenName());
         //2、校验令牌
         try {
-                log.info("jwt校验:{}", token);
-                Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
-                Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
-                log.info("当前后台员工id：{}", empId);
-                //3、通过，放行
-                return true;
+            log.info("jwt校验:{}", token);
+            Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(), token);
+            Long empId = Long.valueOf(claims.get(JwtClaimsConstant.EMP_ID).toString());
+            log.info("当前后台员工id：{}", empId);
+            request.setAttribute("userId", empId);
+            //3、通过，放行
+            return true;
         } catch (Exception ex) {
             //4、不通过，响应401状态码
             response.setStatus(401);

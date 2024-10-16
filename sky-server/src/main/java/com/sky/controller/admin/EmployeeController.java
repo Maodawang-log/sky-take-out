@@ -72,6 +72,17 @@ public class EmployeeController {
         return Result.success();
     }
 
-
-
+    @PostMapping
+    @ApiOperation("新增员工")
+    public Result seve(@RequestBody EmployeeDTO employeeDTO){
+        log.info("新增员工：{}",employeeDTO);
+        employeeService.seve(employeeDTO);
+        return Result.success();
+    }
+    @GetMapping("/page")
+    @ApiOperation("根据条件查询")
+    public Result page(EmployeePageQueryDTO dto){
+        PageResult page = employeeService.page(dto);
+        return Result.success(page);
+    }
 }
